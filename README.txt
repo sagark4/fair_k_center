@@ -34,5 +34,7 @@ python random_fair_k_center.py
 Run the file algorithms.py to get a table like Table 1 in the main paper:
 python algorithms.py
 
-Uncomment the code in the end in algorithms.py to run the algorithms on the 100 GB euclidean dataset
-  
+Uncomment the code from Line 979 to 1005 in algorithms.py to run the algorithms on the 100 GB euclidean dataset
+
+Uncomment the code from Line 1009 to 1092 in algorithms.py to get a table like Table 2 in the main paper.
+

@@ -851,7 +851,7 @@ def process_adult_dataset():
 
 def generate_random_euclidean_dataset():
     N = 40000
-    f = open("euclidean.csv", "ab")
+    f = open("/tmp/euclidean.csv", "ab")
     for i in range(100):
         print("Processed ", i)
         random_data = np.random.uniform(0, 100000, (N, 1000))
@@ -861,7 +861,7 @@ def generate_random_euclidean_dataset():
 
 def generate_random_euclidean_dataset_groups():
     N = 4000000
-    f = open("euclidean_groups.txt", "w")
+    f = open("/tmp/euclidean_groups.txt", "w")
     for i in range(4000000):
         group = np.random.randint(4)
         f.write(str(group) + "\n")
@@ -882,6 +882,10 @@ def run_algorithms():
     global capacities
     global eps
     global blocksize
+    arb_solution = get_arb_solution()
+    if len(arb_solution) == 0:
+        print(dataset, "&", capacities, "&", "No feasible solution satisfying capacity constraint exists.  Not running for this setting")
+        return
     #print("Opt upper bound =", get_opt_upper_bound())
     #print("Unfair greedy cost =", get_unfair_greedy_cost())
     lb = get_opt_lower_bound()
@@ -936,7 +940,7 @@ for dataset, data_file_name, group_file_name in zip(datasets, data_file_names, g
     g = 2
     capacities = [2] * g
     rank = sum(capacities)
-    #print(dataset, "Attribute Male/Female, Capacities = ", capacities)
+    # print(dataset, "Attribute Male/Female, Capacities = ", capacities)
     run_algorithms()
 
 dataset = 'celeba'
@@ -947,7 +951,7 @@ att2 = 40
 g = 4
 capacities = [2] * g
 rank = sum(capacities)
-#print(dataset, "Attribute Male/Female & Young/Not-young, Capacities = ", capacities)
+# print(dataset, "Attribute Male/Female & Young/Not-young, Capacities = ", capacities)
 run_algorithms()
 
 datasets = ['sushia', 'sushib']
@@ -974,8 +978,8 @@ for g in range(5, 11, 5):
 
 # print_logs = True
 # dataset = 'random_euclidean'
-# data_file_name = 'euclidean_random_dataset.csv'
-# group_file_name = 'euclidean_groups.txt'
+# data_file_name = '/tmp/euclidean.csv'
+# group_file_name = '/tmp/euclidean_groups.txt'
 # g = 4
 # capacities = [2] * g
 # rank = sum(capacities)
@@ -994,3 +998,96 @@ for g in range(5, 11, 5):
 # cost_two_pass, solution_two_pass, guess_two_pass = two_pass(eps)
 # end_two_pass = time.time()
 # print("Two pass: ", cost_two_pass, guess_two_pass, end_two_pass - start_two_pass)
+#
+# start_kale = time.time()
+# cost_kale, solution_kale, guess_kale = kale(eps)
+# end_kale = time.time()
+# print("Kale: ", cost_kale, guess_kale, end_kale - start_kale)
+
+# Uncomment the following code to get results in Table 2
+#
+# print("Dataset & Capacities & Lower Bound & Chen et al. & Kale & Kleindessner et al & Two pass & Distributed \\\\")
+# att1 = 21
+# eps = 0.1
+# blocksize = 25
+# num_recs_to_read = 1000
+#
+# datasets = ['celeba', 'sushia', 'sushib', 'adult']
+# data_file_names = ['img_align_celeba_features.dat', 'sushi3-2016/sushi3a.5000.10.order', 'sushi3-2016/sushi3b.5000.10.score', 'uci-adult/adult_normed.csv']
+# group_file_names = ['list_attr_celeba.txt', 'sushi3-2016/sushi3.udata', 'sushi3-2016/sushi3.udata', 'uci-adult/adult_attr.data']
+# for dataset, data_file_name, group_file_name in zip(datasets, data_file_names, group_file_names):
+#     g = 2
+#     capacities = [1, 3]
+#     rank = sum(capacities)
+#     #print(dataset, "Attribute Male/Female, Capacities = ", capacities)
+#     run_algorithms()
+#     capacities = [3, 1]
+#     rank = sum(capacities)
+#     #print(dataset, "Attribute Male/Female, Capacities = ", capacities)
+#     run_algorithms()
+#
+# dataset = 'celeba'
+# data_file_name = 'img_align_celeba_features.dat'
+# group_file_name = 'list_attr_celeba.txt'
+# num_recs_to_read = 1000
+# att2 = 40
+# g = 4
+# capacities = [1, 1, 3, 3]
+# rank = sum(capacities)
+# #print(dataset, "Attribute Male/Female & Young/Not-young, Capacities = ", capacities)
+# run_algorithms()
+#
+# capacities = [3, 3, 1, 1]
+# rank = sum(capacities)
+# #print(dataset, "Attribute Male/Female & Young/Not-young, Capacities = ", capacities)
+# run_algorithms()
+#
+#
+# datasets = ['sushia', 'sushib']
+# data_file_names = ['sushi3-2016/sushi3a.5000.10.order', 'sushi3-2016/sushi3b.5000.10.score']
+# group_file_names = ['sushi3-2016/sushi3.udata', 'sushi3-2016/sushi3.udata']
+# for dataset, data_file_name, group_file_name in zip(datasets, data_file_names, group_file_names):
+#     g = 6
+#     capacities = [1, 1, 1, 3, 3, 3]
+#     rank = sum(capacities)
+#     # print(dataset, "Attribute Male/Female & Age_Group, Capacities = ", capacities)
+#     run_algorithms()
+#     capacities = [3, 3, 3, 1, 1, 1]
+#     rank = sum(capacities)
+#     # print(dataset, "Attribute Male/Female & Age_Group, Capacities = ", capacities)
+#     run_algorithms()
+#     g = 12
+#     capacities = [1, 1, 1, 3, 3, 3, 1, 1, 1, 3, 3, 3]
+#     rank = sum(capacities)
+#     # print(dataset, "Attribute Male/Female & Age_Group, Capacities = ", capacities)
+#     run_algorithms()
+#
+#     g = 12
+#     capacities = [3, 3, 3, 1, 1, 1, 3, 3, 3, 1, 1, 1]
+#     rank = sum(capacities)
+#     # print(dataset, "Attribute Male/Female & Age_Group, Capacities = ", capacities)
+#     run_algorithms()
+#
+# dataset = 'adult'
+# data_file_name = 'uci-adult/adult_normed.csv'
+# group_file_name = 'uci-adult/adult_attr.data'
+# g = 5
+# capacities = [1, 1, 3, 3, 3]
+# rank = sum(capacities)
+# # print(dataset, "Attribute Male/Female & Race, Capacities = ", capacities)
+# run_algorithms()
+# capacities = [3, 3, 1, 1, 1]
+# rank = sum(capacities)
+# # print(dataset, "Attribute Male/Female & Race, Capacities = ", capacities)
+# run_algorithms()
+#
+# g = 10
+# capacities = [1, 1, 3, 3, 3, 1, 1, 3, 3, 3]
+# rank = sum(capacities)
+# # print(dataset, "Attribute Male/Female & Race, Capacities = ", capacities)
+# run_algorithms()
+# capacities = [1, 1, 3, 3, 3, 3, 3, 1, 1, 1]
+# rank = sum(capacities)
+# # print(dataset, "Attribute Male/Female & Race, Capacities = ", capacities)
+# run_algorithms()
+#
